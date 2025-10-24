@@ -41,7 +41,13 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(createProfile, { status: 201 });
+    return NextResponse.json(
+      {
+        profile: createProfile,
+        token: userToken,
+      },
+      { status: 201 }
+    );
   } catch (e) {
     console.error("Error", e);
     return NextResponse.json(
