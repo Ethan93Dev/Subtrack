@@ -1,41 +1,65 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const publicNavLinks = [
+  { href: "/register", label: "Register" },
+  { href: "/login", label: "Login" },
+];
+
+const privateNavLinks = [
+  { href: "/", label: "Home" },
+  { href: "/profile", label: "Profile" },
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/logout", label: "Logout" },
+];
 
 export default function Nav() {
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/profile", label: "Profile" },
-    { href: "/login", label: "Login" },
-  ];
+  // Check session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await axios.get("/api/auth/session", {
+          withCredentials: true,
+        });
+        setIsLoggedIn(res.data.loggedIn);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+    checkSession();
+  }, []);
+
+  const navLinks = isLoggedIn ? privateNavLinks : publicNavLinks;
 
   return (
     <nav className="flex items-center justify-between px-8 py-4 bg-gray-900 text-white shadow-md">
-      {/* Left - Logo / Title */}
+      {/* Logo */}
       <Link
         href="/"
         className="text-2xl font-bold text-purple-500 tracking-wide"
       >
-        Subtrack
+        MyApp
       </Link>
 
-      {/* Right - Navigation Links */}
+      {/* Links */}
       <div className="flex space-x-6">
-        {links.map(({ href, label }) => (
+        {navLinks.map((link) => (
           <Link
-            key={href}
-            href={href}
+            key={link.href}
+            href={link.href}
             className={`${
-              pathname === href
-                ? "text-purple-400 border-b-2 border-purple-400"
+              pathname === link.href
+                ? "text-purple-400 font-bold border-b-2 border-purple-400"
                 : "text-gray-300 hover:text-purple-300"
             } transition-all duration-200 pb-1`}
           >
-            {label}
+            {link.label}
           </Link>
         ))}
       </div>
