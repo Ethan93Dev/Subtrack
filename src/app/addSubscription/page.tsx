@@ -1,12 +1,14 @@
 "use client";
 import React, { useState, FormEvent } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function AddSubscription() {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [cost, setCost] = useState("");
   const [frequency, setFrequency] = useState("monthly");
+  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -17,7 +19,7 @@ export default function AddSubscription() {
         category,
         cost: parseFloat(cost),
         frequency,
-        nextPayment: new Date(), // you can replace this with a proper date input
+        nextPayment: new Date(),
       });
 
       setName("");
@@ -31,7 +33,10 @@ export default function AddSubscription() {
 
   return (
     <div className="p-8 max-w-md mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Add Subscription</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-purple-600 text-center">
+        Add Subscription
+      </h1>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label htmlFor="name">Subscription Name</label>
         <input
@@ -72,12 +77,23 @@ export default function AddSubscription() {
           <option value="yearly">Yearly</option>
         </select>
 
-        <button
-          type="submit"
-          className="bg-purple-600 text-white rounded-lg py-2 mt-2 hover:bg-purple-700 transition-colors"
-        >
-          Add Subscription
-        </button>
+        {/* Button Row */}
+        <div className="flex justify-between mt-4">
+          <button
+            type="submit"
+            className="bg-purple-600 text-white rounded-lg py-2 px-6 hover:bg-purple-700 transition-colors"
+          >
+            Add Subscription
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard")}
+            className="bg-gray-500 text-white rounded-lg py-2 px-6 hover:bg-gray-600 transition-colors"
+          >
+            Next
+          </button>
+        </div>
       </form>
     </div>
   );

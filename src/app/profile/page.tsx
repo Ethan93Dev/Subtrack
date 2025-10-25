@@ -1,25 +1,32 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("/api/profile");
+      await axios.post("/api/profile", {
+        firstname,
+        lastname,
+        avatarUrl,
+      });
       setFirstName("");
       setLastName("");
       setAvatarUrl("");
+      router.push("/addSubscription");
     } catch (e) {
       console.error("Error", e);
     }
   };
   return (
     <div>
-      <h1>Creat profile</h1>
+      <h1>Create profile</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstname">Firstname</label>
         <input

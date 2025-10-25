@@ -20,7 +20,7 @@ export default function Nav() {
         href="/"
         className="text-2xl font-bold text-purple-500 tracking-wide"
       >
-        MyApp
+        Subtrack
       </Link>
 
       {/* Right - Navigation Links */}

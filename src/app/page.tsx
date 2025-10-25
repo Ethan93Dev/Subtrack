@@ -1,6 +1,5 @@
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import Dashboard from "./dashboard/page";
 import { FaClock, FaDollarSign, FaTasks } from "react-icons/fa";
 
 export default function Home() {
