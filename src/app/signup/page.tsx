@@ -3,10 +3,10 @@ import axios from "axios";
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function Signup() {
+  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -15,58 +15,47 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage(null);
+    setMessage(null); // reset message
 
     try {
-      const res = await axios.post(
-        "/api/auth/login",
-        { email, password },
-        { withCredentials: true } // ✅ allow cookies
-      );
+      await axios.post("/api/auth/signup", { username, email, password });
 
-      const { profile } = res.data;
-
+      setUsername("");
       setEmail("");
       setPassword("");
 
-      setMessage({ type: "success", text: "Login successful! Redirecting..." });
+      // Show success message
+      setMessage({
+        type: "success",
+        text: "Account created successfully! Redirecting to login...",
+      });
 
-      // Redirect after short delay
-      setTimeout(() => {
-        if (profile) {
-          router.push("/dashboard"); // existing profile
-        } else {
-          router.push("/createprofile"); // new user
-        }
-      }, 1500);
-    } catch (err: unknown) {
+      // Redirect after a short delay
+      setTimeout(() => router.push("/login"), 2000);
+    } catch (err) {
+      console.error("Error", err);
+
+      // Show error message
       if (axios.isAxiosError(err)) {
-        console.error("Login failed:", err.response?.data || err.message);
-        setMessage({
-          type: "error",
-          text:
-            err.response?.data?.error ||
-            "Login failed. Please check your credentials.",
-        });
+        const msg =
+          err.response?.data?.error ||
+          "Signup failed. Maybe the email is already registered.";
+        setMessage({ type: "error", text: msg });
       } else {
-        console.error("Unexpected error:", err);
         setMessage({
           type: "error",
-          text: "Something went wrong. Please try again later.",
+          text: "Something went wrong. Please try again.",
         });
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white rounded-xl shadow-lg p-10 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
-          Login
-        </h2>
+        <h1 className="text-3xl font-bold text-center text-purple-600 mb-6">
+          Create Account
+        </h1>
 
         {/* Message */}
         {message && (
@@ -85,6 +74,23 @@ export default function Login() {
           <div>
             <label
               className="block text-gray-700 font-medium mb-1"
+              htmlFor="username"
+            >
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full text-black px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 font-medium mb-1"
               htmlFor="email"
             >
               Email
@@ -95,11 +101,10 @@ export default function Login() {
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               className="w-full text-black px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+              required
             />
           </div>
-
           <div>
             <label
               className="block text-gray-700 font-medium mb-1"
@@ -113,24 +118,23 @@ export default function Login() {
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               className="w-full text-black px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+              required
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
             className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
           >
-            {loading ? "Logging in..." : "Login"}
+            Register
           </button>
         </form>
 
         <p className="text-sm text-center text-gray-500 mt-4">
-          Don&apos;t have an account?{" "}
-          <a href="/signup" className="text-purple-600 hover:underline">
-            Sign up
+          Already have an account?{" "}
+          <a href="/login" className="text-purple-600 hover:underline">
+            Login
           </a>
         </p>
       </div>

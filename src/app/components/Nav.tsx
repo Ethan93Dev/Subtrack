@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const publicNavLinks = [
-  { href: "/register", label: "Register" },
+  { href: "/signup", label: "Signup" },
   { href: "/login", label: "Login" },
 ];
 
@@ -20,7 +20,6 @@ export default function Nav() {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check session on mount
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -38,13 +37,10 @@ export default function Nav() {
   const navLinks = isLoggedIn ? privateNavLinks : publicNavLinks;
 
   return (
-    <nav className="flex items-center justify-between px-8 py-4 bg-gray-900 text-white shadow-md">
+    <nav className="flex items-center justify-between px-8 py-4 bg-black text-white shadow-md">
       {/* Logo */}
-      <Link
-        href="/"
-        className="text-2xl font-bold text-purple-500 tracking-wide"
-      >
-        MyApp
+      <Link href="/" className="text-2xl font-bold text-white tracking-wide">
+        Subtrack
       </Link>
 
       {/* Links */}
@@ -55,7 +51,7 @@ export default function Nav() {
             href={link.href}
             className={`${
               pathname === link.href
-                ? "text-purple-400 font-bold border-b-2 border-purple-400"
+                ? "text-white font-bold border-b-2 border-purple-400"
                 : "text-gray-300 hover:text-purple-300"
             } transition-all duration-200 pb-1`}
           >

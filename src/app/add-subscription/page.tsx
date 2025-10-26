@@ -14,7 +14,7 @@ export default function AddSubscription() {
     e.preventDefault();
 
     try {
-      await axios.post("/api/subscription", {
+      await axios.post("/api/subscription/create", {
         name,
         category,
         cost: parseFloat(cost),

@@ -5,8 +5,8 @@ import { AuthType } from "@/types/types";
 
 export async function POST(req: NextRequest) {
   try {
-    const registerBody: AuthType = await req.json();
-    const { username, email, password } = registerBody;
+    const signupBody: AuthType = await req.json();
+    const { username, email, password } = signupBody;
 
     const user = await prisma.user.findUnique({
       where: { email },
