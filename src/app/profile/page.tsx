@@ -93,7 +93,19 @@ export default function Profile() {
                 {userData.isOnline ? "Online" : "Offline"}
               </p>
             </div>
-            <button onClick={() => route.push("./editProfile")}>Edit</button>
+            <button
+              onClick={() => route.push("/edit-profile")}
+              className="bg-purple-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md"
+            >
+              Edit Profile
+            </button>
+            <button
+              type="button"
+              onClick={() => route.push("/dashboard")}
+              className="w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 rounded-lg transition-colors duration-200"
+            >
+              Dashboard
+            </button>
           </div>
 
           <div className="flex-1 relative hidden md:block">

@@ -149,6 +149,13 @@ export default function EditProfile() {
               >
                 {loading ? "Saving..." : "Save Changes"}
               </button>
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 rounded-lg transition-colors duration-200"
+              >
+                Back
+              </button>
             </form>
           </div>
 

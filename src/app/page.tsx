@@ -21,7 +21,7 @@ export default function Home() {
               visibility into where your money goes.
             </p>
             <a
-              href="/dashboard"
+              href="/login"
               className="mt-4 inline-block bg-black text-white px-8 py-3 rounded-lg hover:bg-green-800 transition-colors font-semibold shadow-md"
             >
               Add Subscriptions

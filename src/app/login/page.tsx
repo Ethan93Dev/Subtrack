@@ -22,7 +22,7 @@ export default function Login() {
       const res = await axios.post(
         "/api/auth/login",
         { email, password },
-        { withCredentials: true } // ✅ allow cookies
+        { withCredentials: true } // allows cookies to be sent/received
       );
 
       const { profile } = res.data;
@@ -32,17 +32,18 @@ export default function Login() {
 
       setMessage({ type: "success", text: "Login successful! Redirecting..." });
 
-      // Redirect after short delay
+      // Route based on profile existence
       setTimeout(() => {
-        if (profile) {
-          router.push("/dashboard"); // existing profile
+        if (profile && Object.keys(profile).length > 0) {
+          // Existing profile -> go to dashboard
+          router.push("/dashboard");
         } else {
-          router.push("/create-profile"); // new user
+          // No profile -> go to create-profile
+          router.push("/create-profile");
         }
-      }, 1500);
+      }, 1000); // small delay to show success message
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        console.error("Login failed:", err.response?.data || err.message);
         setMessage({
           type: "error",
           text:
@@ -50,7 +51,6 @@ export default function Login() {
             "Login failed. Please check your credentials.",
         });
       } else {
-        console.error("Unexpected error:", err);
         setMessage({
           type: "error",
           text: "Something went wrong. Please try again later.",

@@ -38,6 +38,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       message: { message: "Data from User" },
+      token,
       user,
     });
   } catch (error) {
