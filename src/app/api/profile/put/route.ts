@@ -6,7 +6,7 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 export async function PUT(req: NextRequest) {
   try {
     const profileBody: ProfileType = await req.json();
-    const { firstName, lastName, avatarUrl } = profileBody;
+    const { firstName, lastName, state, city, county } = profileBody;
 
     const userToken = getDataFromToken(req);
 
@@ -24,7 +24,7 @@ export async function PUT(req: NextRequest) {
 
     const updatedProfile = await prisma.profile.update({
       where: { userId: userToken },
-      data: { firstName, lastName, avatarUrl },
+      data: { firstName, lastName, state, city, county },
     });
 
     return NextResponse.json(updatedProfile, { status: 200 });

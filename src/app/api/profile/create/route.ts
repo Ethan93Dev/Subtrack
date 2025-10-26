@@ -6,7 +6,7 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 export async function POST(req: NextRequest) {
   try {
     const profileBody: ProfileType = await req.json();
-    const { firstName, lastName, avatarUrl } = profileBody;
+    const { firstName, lastName, state, city, county } = profileBody;
 
     const userToken = getDataFromToken(req);
 
@@ -36,7 +36,9 @@ export async function POST(req: NextRequest) {
       data: {
         firstName,
         lastName,
-        avatarUrl,
+        state,
+        city,
+        county,
         userId: userToken,
       },
     });

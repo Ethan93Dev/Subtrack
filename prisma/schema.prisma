@@ -25,7 +25,9 @@ model Profile {
   userId    Int      @unique
   firstName String
   lastName  String
-  avatarUrl String?
+  state      String
+  city    String
+  county  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

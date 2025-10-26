@@ -37,7 +37,7 @@ export default function Login() {
         if (profile) {
           router.push("/dashboard"); // existing profile
         } else {
-          router.push("/createprofile"); // new user
+          router.push("/create-profile"); // new user
         }
       }, 1500);
     } catch (err: unknown) {
