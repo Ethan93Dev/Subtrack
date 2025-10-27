@@ -11,15 +11,15 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch only the logged-in user's subscriptions
-    const subscriptions = await prisma.subscription.findMany({
+    const subscriptions = await prisma.bill.findMany({
       where: { userId },
       select: {
         id: true,
         name: true,
         category: true,
-        cost: true,
-        frequency: true,
-        nextPayment: true,
+        amount: true,
+        dueDate: true,
+        status: true,
         createdAt: true,
       },
     });

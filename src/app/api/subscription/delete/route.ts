@@ -27,7 +27,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Verify subscription belongs to user
-    const subscription = await prisma.subscription.findFirst({
+    const subscription = await prisma.bill.findFirst({
       where: { id: Number(id), userId },
     });
 
@@ -39,7 +39,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Delete the subscription
-    const deletedSubscription = await prisma.subscription.delete({
+    const deletedSubscription = await prisma.bill.delete({
       where: { id: subscription.id },
     });
 

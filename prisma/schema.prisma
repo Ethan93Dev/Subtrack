@@ -15,7 +15,7 @@ model User {
   password  String 
   createdAt DateTime @default(now())
   isOnline  Boolean
-  subscription Subscription[]
+  bill  Bill[]
   profile    Profile?
 }
 
@@ -32,15 +32,14 @@ model Profile {
   updatedAt DateTime @updatedAt
 }
 
-
-model Subscription {
-  id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  name        String
-  category    String?
-  cost        Float
-  frequency   String   // "monthly", "yearly"
-  nextPayment DateTime
-  createdAt   DateTime @default(now())
+model Bill {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  String
+  amount    Float
+  dueDate   DateTime
+  status    String   @default("unpaid")
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }

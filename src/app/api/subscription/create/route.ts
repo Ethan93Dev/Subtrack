@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/database/prisma";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import { SubscriptionType } from "@/types/types";
+import { BillType } from "@/types/types";
 
 export async function POST(req: NextRequest) {
   try {
-    const subscriptionBody: SubscriptionType = await req.json();
-    const { name, category, cost, frequency, nextPayment } = subscriptionBody;
+    const billBody: BillType = await req.json();
+    const { name, category, amount, dueDate, status } = billBody;
 
     const userId = getDataFromToken(req);
 
@@ -17,26 +17,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if user already has a subscription
-    const existingSubscription = await prisma.subscription.findFirst({
-      where: { userId },
+    // Optionally check if user already has a bill with the same name
+    const existingBill = await prisma.bill.findFirst({
+      where: {
+        name,
+        userId,
+      },
     });
 
-    if (existingSubscription) {
+    if (existingBill) {
       return NextResponse.json(
-        { message: "User already has an existing subscription" },
+        { message: "Bill with this name already exists for this user" },
         { status: 400 }
       );
     }
 
-    // Create a new subscription
-    const createdSubscription = await prisma.subscription.create({
+    // Create a new bill
+    const createdBill = await prisma.bill.create({
       data: {
         name,
         category,
-        cost,
-        frequency,
-        nextPayment: new Date(nextPayment),
+        amount,
+        dueDate: new Date(dueDate),
+        status: status || "unpaid",
         createdAt: new Date(),
         userId,
       },
@@ -44,13 +47,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Subscription created successfully",
-        subscription: createdSubscription,
+        message: "Bill created successfully",
+        bill: createdBill,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating subscription:", error);
+    console.error("Error creating bill:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }

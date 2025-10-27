@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/database/prisma";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import { SubscriptionType } from "@/types/types";
+import { BillType } from "@/types/types";
 
 export async function PUT(req: NextRequest) {
   try {
-    const subscriptionBody: SubscriptionType = await req.json();
-    const { name, category, cost, frequency, nextPayment } = subscriptionBody;
+    const billBody: BillType = await req.json();
+    const { id, name, category, amount, status, dueDate } = billBody;
 
     const userId = getDataFromToken(req);
 
@@ -14,35 +14,45 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "No user logged in" }, { status: 401 });
     }
 
-    // Find the first subscription for this user (or you could identify by ID if sent in body)
-    const existingSubscription = await prisma.subscription.findFirst({
-      where: { userId },
+    if (!id) {
+      return NextResponse.json(
+        { error: "Bill ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Ensure the bill belongs to this user
+    const existingBill = await prisma.bill.findUnique({
+      where: { id },
     });
 
-    if (!existingSubscription) {
+    if (!existingBill || existingBill.userId !== userId) {
       return NextResponse.json(
-        { error: "Subscription not found for this user" },
+        { error: "Bill not found or not authorized" },
         { status: 404 }
       );
     }
 
-    // Update the subscription
-    const updatedSubscription = await prisma.subscription.update({
-      where: { id: existingSubscription.id },
+    // Update the bill
+    const updatedBill = await prisma.bill.update({
+      where: { id },
       data: {
         name,
         category,
-        cost,
-        frequency,
-        nextPayment,
+        amount,
+        status,
+        dueDate: dueDate ? new Date(dueDate) : existingBill.dueDate,
       },
     });
 
-    return NextResponse.json(updatedSubscription, { status: 200 });
-  } catch (error) {
-    console.error("Error updating subscription:", error);
     return NextResponse.json(
-      { error: "Failed to update subscription" },
+      { message: "Bill updated successfully", bill: updatedBill },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating bill:", error);
+    return NextResponse.json(
+      { error: "Failed to update bill" },
       { status: 500 }
     );
   }

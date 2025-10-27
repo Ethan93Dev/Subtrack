@@ -11,12 +11,13 @@ export type ProfileType = {
   city: string;
   county: string;
 };
-export type SubscriptionType = {
+export type BillType = {
+  id?: number;
   name: string;
-  category?: string;
-  cost: number;
-  frequency: "monthly" | "yearly";
-  nextPayment: Date;
+  category: string;
+  amount: number;
+  dueDate: string;
+  status?: string;
 };
 
 export type UserData = {

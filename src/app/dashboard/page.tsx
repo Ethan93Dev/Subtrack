@@ -1,9 +1,9 @@
 "use client";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-
-import React from "react";
-import SubscriptionCharts from "./components/SubscriptionChartInner";
+import DashboardChars from "../dashboard-chars/page";
+import DashboardCreateSubscription from "../dashboard-create-subscription/page";
+import ShowDashboardSubscription from "../dashboard-show-subscription/page";
 
 export default function Dashboard() {
   const subscriptions = [
@@ -24,8 +24,10 @@ export default function Dashboard() {
           Overview of your subscriptions by category and cost.
         </p>
 
-        <SubscriptionCharts subscriptions={subscriptions} />
+        <DashboardChars subscriptions={subscriptions} />
       </div>
+      <DashboardCreateSubscription />
+      <ShowDashboardSubscription />
       <Footer />
     </>
   );
